@@ -4,29 +4,27 @@ import (
 	"fmt"
 )
 
-//данные для JS
-type TCollageImage struct {
-	PosX int
-	PosY int
-	Path string
-}
-
-type TCollage struct {
-	Images []TCollageImage
-}
-
 type TCollager struct {
-	Items int //количество картинок на странице
+	Items    int    //количество картинок на странице
+	Database string //путь к базе json
+	DB       *TDatabase
 }
 
 //вернуть коллаж для JS в JSON
-func (t *TCollager) getCollage(ws string, hs string) (*TCollager, error) {
+func (t *TCollager) getCollage(ws string, hs string) (*TCollage, error) {
 	if len(ws) == 0 {
 		return nil, fmt.Errorf("Ширина не указана")
 	}
 	if len(hs) == 0 {
 		return nil, fmt.Errorf("Ширина не указана")
 	}
+	if t.DB == nil {
+		return nil, fmt.Errorf("Отсутствует база картинок!")
+	}
+	if len(t.DB.Images) == 0 {
+		return nil, fmt.Errorf("Отсутствует картинки в базе!")
+	}
+	//требуется сделать коллаж по размерам
 	fmt.Println("ws=" + ws + " hs=" + hs)
 	w := 0
 	h := 0
@@ -34,6 +32,13 @@ func (t *TCollager) getCollage(ws string, hs string) (*TCollager, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Ошибка чтения размеров окна: " + err.Error())
 	}
-	collage := TCollager{}
-	return &collage, nil
+
+	if w <= 0 {
+		return nil, fmt.Errorf("Задана нулевая ширина окна! ")
+	}
+	if h <= 0 {
+		return nil, fmt.Errorf("Задана нулевая высота окна! ")
+	}
+
+	return t.create(w, h)
 }

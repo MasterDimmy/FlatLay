@@ -64,6 +64,11 @@ func main() {
 		fmt.Printf("%s", string(b))
 	*/
 
+	app.Cfg.Collager.DB, err = app.Cfg.Collager.readDatabase()
+	if ErrorCheck(err, "Ошибка чтения файла базы картинок!") {
+		return
+	}
+
 	err = app.createWebServer()
 	if ErrorCheck(err, "Ошибка запуска демо Веб-сервера!") {
 		return

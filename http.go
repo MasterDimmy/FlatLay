@@ -27,7 +27,7 @@ func ProtoError(w http.ResponseWriter, s string) {
 
 func ProtoSuccess(w http.ResponseWriter, s interface{}) {
 	p := TProtoJSSuccess{
-		Success: false,
+		Success: true,
 		Items:   s,
 	}
 	buf, _ := json.MarshalIndent(p, "", " ")
@@ -46,6 +46,11 @@ func root(w http.ResponseWriter, r *http.Request) {
 func getData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache")
 	fmt.Println(r.URL.String())
+	err := r.ParseForm()
+	if err != nil {
+		ProtoError(w, "Ошибка: "+err.Error())
+		return
+	}
 	ws := r.Form.Get("width")
 	hs := r.Form.Get("height")
 	data, err := app.Cfg.Collager.getCollage(ws, hs)

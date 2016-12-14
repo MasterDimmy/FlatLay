@@ -13,17 +13,34 @@
 		<meta http-equiv="Expires" content="0" />
 		
 		<script src="./libs/jquery.min.js"></script>		
-		<script src="./onload.js"></script>
+		
+		<style>
+			html,body{
+				height:100%;
+			}
+			.container
+			{
+				margin: auto;
+				vertical-align: middle;
+				width:80%;
+				height:50%;
+				background-color:#efe;
+			}
+			.data {
+				height:100%;
+				width:100%;
+			}
+	    </style>
 	</head>
 
 	<body>
-		<h1> Демонстрация программы создания коллажей v0.1 </h1>
-		<div align="center">
-		<table id="table1" border="1" width="800" height="800">
-			<tr>
-			<td><div id="data">data</div></td>
-			</tr>
-		<table>
-		</div>
+		<h1 align="center"> Демонстрация программы создания коллажей v0.1 </h1>
+		<br>
+			<div class="container">
+				<div id="data" class="data">data</div>
+			</div>
 	</body>
+	
+	<script src="./onload.js"></script>
+
 </html>
