@@ -1,9 +1,38 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
+
+type TProtoJSError struct {
+	Success bool
+	Message string
+}
+
+type TProtoJSSuccess struct {
+	Success bool
+	Items   interface{}
+}
+
+func ProtoError(w http.ResponseWriter, s string) {
+	p := TProtoJSError{
+		Success: false,
+		Message: s,
+	}
+	buf, _ := json.MarshalIndent(p, "", " ")
+	w.Write(buf)
+}
+
+func ProtoSuccess(w http.ResponseWriter, s interface{}) {
+	p := TProtoJSSuccess{
+		Success: false,
+		Items:   s,
+	}
+	buf, _ := json.MarshalIndent(p, "", " ")
+	w.Write(buf)
+}
 
 func root(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache")
@@ -17,7 +46,14 @@ func root(w http.ResponseWriter, r *http.Request) {
 func getData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache")
 	fmt.Println(r.URL.String())
-	w.Write([]byte("your data"))
+	ws := r.Form.Get("width")
+	hs := r.Form.Get("height")
+	data, err := app.Cfg.Collager.getCollage(ws, hs)
+	if err != nil {
+		ProtoError(w, "Ошибка: "+err.Error())
+	} else {
+		ProtoSuccess(w, data)
+	}
 }
 
 func (a *TApp) createWebServer() error {
