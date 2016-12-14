@@ -16,7 +16,8 @@ type TImage struct {
 }
 
 type TDatabase struct {
-	Images []TImage
+	Images []TImage //картинки
+	groups int      //сколько всего групп в картинках?
 }
 
 func (t *TCollager) readDatabase() (*TDatabase, error) {
@@ -29,5 +30,14 @@ func (t *TCollager) readDatabase() (*TDatabase, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Ошибка парсинга файла базы картинок: " + err.Error())
 	}
+	var m map[int]bool
+	for _, i := range db.Images {
+		_, ok := m[i.Group]
+		if !ok {
+			m[i.Group] = true
+			db.groups++
+		}
+	}
+
 	return &db, nil
 }

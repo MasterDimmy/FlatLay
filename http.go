@@ -43,7 +43,8 @@ func root(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getData(w http.ResponseWriter, r *http.Request) {
+//сформировать коллаж для указанных размеров и группы
+func getField(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache")
 	fmt.Println(r.URL.String())
 	err := r.ParseForm()
@@ -53,12 +54,18 @@ func getData(w http.ResponseWriter, r *http.Request) {
 	}
 	ws := r.Form.Get("width")
 	hs := r.Form.Get("height")
-	data, err := app.Cfg.Collager.getCollage(ws, hs)
+	gs := r.Form.Get("group")
+	data, err := app.Cfg.Collager.getCollage(gs, ws, hs)
 	if err != nil {
 		ProtoError(w, "Ошибка: "+err.Error())
 	} else {
 		ProtoSuccess(w, data)
 	}
+}
+
+//сколько всего будет коллажей (на основе количества групп)
+func getTotal(w http.ResponseWriter, r *http.Request) {
+	ProtoSuccess(w, app.Cfg.Collager.DB.groups)
 }
 
 func (a *TApp) createWebServer() error {
@@ -67,7 +74,7 @@ func (a *TApp) createWebServer() error {
 	}
 
 	http.HandleFunc("/", root)
-	http.HandleFunc("/get_data", getData)
+	http.HandleFunc("/get_field", getField)
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir(app.Cfg.WebServer.Static)))
 	http.Handle("/static/", fileServer)
 

@@ -7,11 +7,12 @@ import (
 type TCollager struct {
 	Items    int    //количество картинок на странице
 	Database string //путь к базе json
-	DB       *TDatabase
+
+	DB *TDatabase
 }
 
 //вернуть коллаж для JS в JSON
-func (t *TCollager) getCollage(ws string, hs string) (*TCollage, error) {
+func (t *TCollager) getCollage(gs string, ws string, hs string) (*TCollage, error) {
 	if len(ws) == 0 {
 		return nil, fmt.Errorf("Ширина не указана")
 	}
@@ -25,10 +26,11 @@ func (t *TCollager) getCollage(ws string, hs string) (*TCollage, error) {
 		return nil, fmt.Errorf("Отсутствует картинки в базе!")
 	}
 	//требуется сделать коллаж по размерам
-	fmt.Println("ws=" + ws + " hs=" + hs)
+	fmt.Println("gs=" + gs + " ws=" + ws + " hs=" + hs)
 	w := 0
 	h := 0
-	_, err := fmt.Sscanf(ws+" "+hs+"\n", "%d %d", &w, &h)
+	g := 0
+	_, err := fmt.Sscanf(gs+" "+ws+" "+hs+"\n", "%d %d %d", &g, &w, &h)
 	if err != nil {
 		return nil, fmt.Errorf("Ошибка чтения размеров окна: " + err.Error())
 	}
@@ -40,5 +42,5 @@ func (t *TCollager) getCollage(ws string, hs string) (*TCollage, error) {
 		return nil, fmt.Errorf("Задана нулевая высота окна! ")
 	}
 
-	return t.create(w, h)
+	return t.create(g, w, h)
 }
