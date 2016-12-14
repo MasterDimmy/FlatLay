@@ -1,0 +1,6 @@
+{
+	"WebServer": {
+		"IpPort": ":7070",	
+		"Static": "./static"
+	}
+}
