@@ -5,8 +5,9 @@ import (
 )
 
 type TCollager struct {
-	Items    int    //количество картинок на странице
-	Database string //путь к базе json
+	Items       int    //количество картинок на странице
+	Database    string //путь к базе json
+	ImageFolder string //путь к картинкам
 
 	DB *TDatabase
 }

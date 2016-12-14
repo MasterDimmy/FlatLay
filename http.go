@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
+	"time"
 )
 
 type TProtoJSError struct {
@@ -41,6 +44,7 @@ func root(w http.ResponseWriter, r *http.Request) {
 	case "/":
 		http.Redirect(w, r, "/static/index.html", http.StatusMovedPermanently)
 	}
+	http.Error(w, "404 Page Not Found!", 404)
 }
 
 //сформировать коллаж для указанных размеров и группы
@@ -64,8 +68,26 @@ func getField(w http.ResponseWriter, r *http.Request) {
 }
 
 //сколько всего будет коллажей (на основе количества групп)
-func getTotal(w http.ResponseWriter, r *http.Request) {
+func getTotalGroups(w http.ResponseWriter, r *http.Request) {
 	ProtoSuccess(w, app.Cfg.Collager.DB.groups)
+}
+
+//вернуть картинку
+func getImage(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		ProtoError(w, "Ошибка: "+err.Error())
+		return
+	}
+	path := r.Form.Get("path")
+	sp := filepath.Join(app.Cfg.Collager.ImageFolder, path)
+	fmt.Println("serve path: " + sp)
+	file, err := os.Open(sp)
+	if err != nil {
+		http.Error(w, err.Error(), 404)
+		return
+	}
+	http.ServeContent(w, r, r.URL.String(), time.Time{}, file)
 }
 
 func (a *TApp) createWebServer() error {
@@ -75,6 +97,8 @@ func (a *TApp) createWebServer() error {
 
 	http.HandleFunc("/", root)
 	http.HandleFunc("/get_field", getField)
+	http.HandleFunc("/get_image", getImage)
+	http.HandleFunc("/get_total_groups", getTotalGroups)
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir(app.Cfg.WebServer.Static)))
 	http.Handle("/static/", fileServer)
 

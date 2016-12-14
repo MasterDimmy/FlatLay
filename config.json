@@ -5,6 +5,7 @@
 	},
 	"Collager": {
 		"Items": 9,
-		"Database": "database.json"
+		"Database": "database.json",
+		"ImageFolder": "./looks"
 	}
 }

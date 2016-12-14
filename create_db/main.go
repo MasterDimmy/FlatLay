@@ -77,7 +77,7 @@ func walkFn(path string, info os.FileInfo, err error) error {
 
 	image := TImage{
 		Name:   filepath.Base(path),
-		Path:   path,
+		Path:   filepath.Base(path), //пока что совпадают
 		Width:  img.Bounds().Max.X,
 		Height: img.Bounds().Max.Y,
 		Weight: 1,

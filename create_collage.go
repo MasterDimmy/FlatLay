@@ -1,6 +1,8 @@
 package main
 
-//"fmt"
+import (
+	"fmt"
+)
 
 //данные для JS
 type TCollageImage struct {
@@ -23,11 +25,12 @@ type TLimits struct {
 }
 
 func (t *TCollager) create(group int, w int, h int) (*TCollage, error) {
+	fmt.Println("create for ", group, w, h)
 	collage := TCollage{MaxAvailable: int64(w) * int64(h)}
 
 	//создаем поле для группы с ее ограничениями
 	//может работать параллельно одновременно для разных пользователей с разными ограничениями
-	b, f := t.gen(&TLimits{maxX: w, maxY: h, group: group}, 0, nil)
+	b, f := t.gen(&TLimits{maxX: w, maxY: h, group: group}, 0, make(TField))
 
 	//преобразуем поле в коллаж для JS
 	for n, v := range f {

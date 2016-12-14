@@ -18,12 +18,18 @@
 			html,body{
 				height:100%;
 			}
+			.auto {
+				margin: auto;
+			}
+			.container_width {
+				width:80%;
+			}
 			.container
 			{
-				margin: auto;
 				vertical-align: middle;
-				width:80%;
 				height:50%;
+			}
+			.color {
 				background-color:#efe;
 			}
 			.data {
@@ -35,9 +41,13 @@
 
 	<body>
 		<h1 align="center"> Демонстрация программы создания коллажей v0.1 </h1>
+		<div class="auto container_width"><div>Всего возможных групп (категорий), и коллажей: </div><div id="total_groups">?</div></div>
 		<br>
-			<div class="container">
-				<div id="data" class="data">data</div>
+			<div id="collage" class="container_width auto container">
+				<p>Коллаж №1</p>
+				<div id="square">?</div>
+				<div id="max_square">?</div>
+				<div id="data" class="data color"></div>
 			</div>
 	</body>
 	

@@ -30,7 +30,7 @@ func (t *TCollager) readDatabase() (*TDatabase, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Ошибка парсинга файла базы картинок: " + err.Error())
 	}
-	var m map[int]bool
+	m := make(map[int]bool)
 	for _, i := range db.Images {
 		_, ok := m[i.Group]
 		if !ok {
