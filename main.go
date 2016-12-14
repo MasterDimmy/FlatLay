@@ -53,13 +53,14 @@ func main() {
 		return
 
 	}
-
-	fmt.Println("Считанные настройки: ")
-	b, err := json.MarshalIndent(app.Cfg, "", " ")
-	if ErrorCheck(err, "ERROR") {
-		return
-	}
-	fmt.Printf("%s", string(b))
+	/*
+		fmt.Println("Считанные настройки: ")
+		b, err := json.MarshalIndent(app.Cfg, "", " ")
+		if ErrorCheck(err, "ERROR") {
+			return
+		}
+		fmt.Printf("%s", string(b))
+	*/
 
 	err = app.createWebServer()
 	if ErrorCheck(err, "Ошибка запуска демо Веб-сервера!") {
