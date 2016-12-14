@@ -27,7 +27,8 @@ func (a *TApp) createWebServer() error {
 
 	http.HandleFunc("/", root)
 	http.HandleFunc("/get_data", getData)
-	http.Handle("/static", http.FileServer(http.Dir(app.Cfg.WebServer.Static)))
+	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir(app.Cfg.WebServer.Static)))
+	http.Handle("/static/", fileServer)
 
 	fmt.Println("\nЗапуск Веб-сервера по адресу http://" + a.Cfg.WebServer.IpPort + "\nКаталог Веб-сервера: " + app.Cfg.WebServer.Static)
 

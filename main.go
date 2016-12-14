@@ -18,8 +18,10 @@ type TWebConfig struct {
 	IpPort string
 	Static string
 }
+
 type TConfig struct {
 	WebServer TWebConfig
+	Collager  TCollager
 }
 
 type TApp struct {
