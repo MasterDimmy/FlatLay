@@ -15,6 +15,11 @@
 };
 					
  function ready() {
+ 
+ 		while (document.getElementById("data").hasChildNodes()) {
+			document.getElementById("data").removeChild(document.getElementById("data").lastChild);
+		}
+ 
 		var cur = last;
 		last++;
 		var total_groups = 0;
@@ -40,10 +45,6 @@
 				//json.Items: 	Images, Square, MaxAvailable
 				//images: [PosX, Pos, Path]
 				
-				while (document.getElementById("data").hasChildNodes()) {
-					document.getElementById("data").removeChild(document.getElementById("data").lastChild);
-				}
-
 				document.getElementById("square").innerHTML = "Занятая площадь = "+json.Items.Square;
 				document.getElementById("max_square").innerHTML = "Максимально возможная = " + json.Items.MaxAvailable;
 				json.Items.Images.forEach(function(item, i) {
