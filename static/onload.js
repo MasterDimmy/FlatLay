@@ -1,4 +1,19 @@
 ﻿ var last = 0;
+ 
+ function cumulativeOffset(element) {
+	var top = 0, left = 0;
+	do {
+		top += element.offsetTop  || 0;
+		left += element.offsetLeft || 0;
+		element = element.offsetParent;
+	} while(element);
+
+	return {
+		top: top,
+		left: left
+	};
+};
+					
  function ready() {
 		var cur = last;
 		last++;
@@ -35,8 +50,11 @@
 					console.log("item=",item);	
 					var image=document.createElement("img");
 					image.src="/get_image?path="+item.Path;
-					var x = item.PosX + document.getElementById("data").getBoundingClientRect().left+4;
-					var y = item.PosY + document.getElementById("data").getBoundingClientRect().top+4;
+					
+					var offset = cumulativeOffset(document.getElementById("data"));
+					var x = item.PosX + offset.left+4;
+					var y = item.PosY + offset.top+4;
+
 					image.style = "position:absolute;left:"+x+"px;top:"+y+"px;";
 					document.getElementById("data").appendChild(image);
 				});
@@ -54,3 +72,4 @@
  
 $("#group").change(ready);
  
+$('body').css('top', -(document.documentElement.scrollTop) + 'px').addClass('noscroll');
