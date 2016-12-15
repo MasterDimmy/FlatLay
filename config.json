@@ -7,6 +7,6 @@
 		"Items": 9,
 		"Database": "database.json",
 		"ImageFolder": "./looks",
-		"GenLimitInSec": 2
+		"GenLimitInSec": 1
 	}
 }
