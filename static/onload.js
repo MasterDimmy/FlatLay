@@ -1,4 +1,7 @@
-﻿ function ready() {
+﻿ var last = 0;
+ function ready() {
+		var cur = last;
+		last++;
 		var total_groups = 0;
 		$.getJSON("/get_total_groups", function(json) {
 			console.log(json);
@@ -15,6 +18,10 @@
 		$.getJSON("/get_field?group="+document.getElementById("group").value+"&width="+document.getElementById("data").offsetWidth+"&height="+document.getElementById("data").offsetHeight, function(json) {
 			console.log(json);
 			if (json.Success == true) {
+				if (cur!=last-1) {
+					console.log("cur=",cur," last=",last);
+					return; //был запрос новее
+				}
 				//json.Items: 	Images, Square, MaxAvailable
 				//images: [PosX, Pos, Path]
 				
