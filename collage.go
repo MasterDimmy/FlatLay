@@ -8,6 +8,7 @@ type TCollager struct {
 	Items       int    //количество картинок на странице
 	Database    string //путь к базе json
 	ImageFolder string //путь к картинкам
+	GenLimitInSec int //ограничение времени генерации в сек.
 
 	DB *TDatabase
 }
