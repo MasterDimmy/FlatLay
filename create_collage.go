@@ -32,6 +32,8 @@ func (t *TCollager) create(group int, w int, h int) (*TCollage, error) {
 	//может работать параллельно одновременно для разных пользователей с разными ограничениями
 	b, f := t.gen(&TLimits{maxX: w, maxY: h, group: group}, 0, make(TField))
 
+	fmt.Println("Создан коллаж из", len(f), " картинок")
+
 	//преобразуем поле в коллаж для JS
 	for n, v := range f {
 		collage.Images = append(collage.Images, TCollageImage{
@@ -39,6 +41,7 @@ func (t *TCollager) create(group int, w int, h int) (*TCollage, error) {
 			PosY: v.y,
 			Path: t.DB.Images[n].Path,
 		})
+		fmt.Println("x ", v.x, "y ", v.y)
 	}
 
 	//указываем занятую площадь
@@ -60,23 +63,52 @@ type TField map[int]*TFieldItem
 //num - номер вставляемой по базе
 //x,y - куда вставляем
 func (t *TCollager) trypaste(limits *TLimits, num int, x int, y int, f TField) bool {
+	//1. картинка должна вмещаться в рамки по X
+	if (x + t.DB.Images[num].Width) > limits.maxX {
+		return false
+	}
+	//2. картинка должна вмещаться в рамки по Y
+	if (y + t.DB.Images[num].Height) > limits.maxY {
+		return false
+	}
+	//	fmt.Printf("Test: num:%d x:%d y:%d w:%d h:%d\n", num, x, y, t.DB.Images[num].Width, t.DB.Images[num].Height)
 	for i, v := range f {
-		//1. проверяем правило размещения по весам:
+		//3. проверяем правило размещения по весам:
 		//не должно быть картинки БОЛЬШЕ весом, которая будет НАД текущей
 		//т.е. нельзя чтобы any.y+any.H<=y
 		if (t.DB.Images[i].Height+v.y > y) && (t.DB.Images[i].Weight > t.DB.Images[num].Weight) {
 			return false
 		}
-		//2. картинка должна вмещаться в рамки по X
-		if x+t.DB.Images[num].Width > limits.maxX {
-			return false
-		}
-		//3. картинка должна вмещаться в рамки по Y
-		if y+t.DB.Images[num].Height > limits.maxY {
-			return false
-		}
 		//4. не должно быть наложений картинок
-		//
+		if v.x <= x && x <= v.x+t.DB.Images[i].Width { //левая внутри кого-то
+			if v.y <= y && y <= v.y+t.DB.Images[i].Height { //верхняя наша
+				return false
+			}
+			if y <= v.y && v.y <= y+t.DB.Images[num].Height { //верхняя чужая
+				return false
+			}
+			if v.y <= y+t.DB.Images[num].Height && y+t.DB.Images[num].Height <= v.y+t.DB.Images[i].Height { //нижняя наша
+				return false
+			}
+			if y <= v.y+t.DB.Images[i].Height && v.y+t.DB.Images[i].Height <= y+t.DB.Images[num].Height { //нижняя чужая
+				return false
+			}
+		}
+		if v.x <= x+t.DB.Images[num].Width && x+t.DB.Images[num].Width <= v.x+t.DB.Images[i].Width { //правая внутри кого-то
+			if v.y <= y && y <= v.y+t.DB.Images[i].Height { //верхняя наша
+				return false
+			}
+			if y <= v.y && v.y <= y+t.DB.Images[num].Height { //верхняя чужая
+				return false
+			}
+			if v.y <= y+t.DB.Images[num].Height && y+t.DB.Images[num].Height <= v.y+t.DB.Images[i].Height { //нижняя наша
+				return false
+			}
+		}
+		//5. полное накрытие начал
+		if v.x == x && v.y == y {
+			return false
+		}
 	}
 	return true
 }
@@ -96,8 +128,10 @@ func (t *TCollager) gen(limits *TLimits, used_square int64, used_field TField) (
 			varx := []int{0} //создаем варианты размещения по X
 			vary := []int{0} //создаем варианты размещения по Y
 			for i, v := range used_field {
-				varx = append(varx, v.x+t.DB.Images[i].Width)
-				vary = append(varx, v.y+t.DB.Images[i].Height)
+				varx = append(varx, v.x+1)
+				varx = append(varx, v.x+t.DB.Images[i].Width+1)
+				vary = append(varx, v.y+1)
+				vary = append(varx, v.y+t.DB.Images[i].Height+1)
 			}
 			for _, x := range varx { //перебираем варианты по X
 				for _, y := range vary { //перебираем варианты по Y

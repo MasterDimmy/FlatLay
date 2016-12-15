@@ -81,7 +81,6 @@ func getImage(w http.ResponseWriter, r *http.Request) {
 	}
 	path := r.Form.Get("path")
 	sp := filepath.Join(app.Cfg.Collager.ImageFolder, path)
-	fmt.Println("serve path: " + sp)
 	file, err := os.Open(sp)
 	if err != nil {
 		http.Error(w, err.Error(), 404)
