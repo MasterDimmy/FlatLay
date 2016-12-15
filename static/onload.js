@@ -13,9 +13,12 @@
 		left: left
 	};
 };
+
+function imgclick () {
+	alert(this.src);
+};
 					
- function ready() {
- 
+ function ready() { 
  		while (document.getElementById("data").hasChildNodes()) {
 			document.getElementById("data").removeChild(document.getElementById("data").lastChild);
 		}
@@ -51,6 +54,7 @@
 					console.log("item=",item);	
 					var image=document.createElement("img");
 					image.src="/get_image?path="+item.Path;
+					image.onclick = imgclick;
 					
 					var offset = cumulativeOffset(document.getElementById("data"));
 					var x = item.PosX + offset.left+4;
