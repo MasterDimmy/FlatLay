@@ -35,6 +35,12 @@ func (t *TCollager) create(group int, w int, h int) (*TCollage, error) {
 	tm := time.Now()
 	b, f := t.gen(&TLimits{maxX: w, maxY: h, group: group}, 0, make(TField), &tm)
 
+	/*
+		if b == 0 && f == nil {
+			return nil, fmt.Errorf("Превышение времени выполнения в %d секунд", t.GenLimitInSec)
+		}
+	*/
+
 	fmt.Println("Создан коллаж из", len(f), " картинок")
 
 	//преобразуем поле в коллаж для JS
@@ -44,7 +50,7 @@ func (t *TCollager) create(group int, w int, h int) (*TCollage, error) {
 			PosY: v.y,
 			Path: t.DB.Images[n].Path,
 		})
-		fmt.Println("x ", v.x, "y ", v.y)
+		//fmt.Println("x ", v.x, "y ", v.y)
 	}
 
 	//указываем занятую площадь
