@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 //данные для JS
@@ -31,7 +32,8 @@ func (t *TCollager) create(group int, w int, h int) (*TCollage, error) {
 	//создаем поле для группы с ее ограничениями
 	//может работать параллельно одновременно для разных пользователей с разными ограничениями
 	//если группа 0, то без категорий
-	b, f := t.gen(&TLimits{maxX: w, maxY: h, group: group}, 0, make(TField))
+	tm := time.Now()
+	b, f := t.gen(&TLimits{maxX: w, maxY: h, group: group}, 0, make(TField), &tm)
 
 	fmt.Println("Создан коллаж из", len(f), " картинок")
 
@@ -115,7 +117,12 @@ func (t *TCollager) trypaste(limits *TLimits, num int, x int, y int, f TField) b
 }
 
 //генерируем поле!
-func (t *TCollager) gen(limits *TLimits, used_square int64, used_field TField) (int64, TField) {
+func (t *TCollager) gen(limits *TLimits, used_square int64, used_field TField, start_time *time.Time) (int64, TField) {
+	tm := time.Since(*start_time)
+	if tm > time.Duration(t.TimeLimit)*time.Second {
+		return used_square, used_field //превышение времени
+	}
+
 	best_square := used_square      //максимальная площадь
 	best_field := used_field        //лучшее поле для максимальной площади
 	for n, _ := range t.DB.Images { //перебираем каждую картинку и пробуем ее вставить
@@ -141,7 +148,7 @@ func (t *TCollager) gen(limits *TLimits, used_square int64, used_field TField) (
 							x: x,
 							y: y,
 						}
-						ns, nf := t.gen(limits, used_square+int64(t.DB.Images[n].Width)*int64(t.DB.Images[n].Height), used_field)
+						ns, nf := t.gen(limits, used_square+int64(t.DB.Images[n].Width)*int64(t.DB.Images[n].Height), used_field, start_time)
 						if ns > best_square {
 							best_square = ns
 							best_field = make(TField) //копируем новое поле

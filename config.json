@@ -6,6 +6,7 @@
 	"Collager": {
 		"Items": 9,
 		"Database": "database.json",
-		"ImageFolder": "./looks"
+		"ImageFolder": "./looks",
+		"TimeLimit": 1
 	}
 }
