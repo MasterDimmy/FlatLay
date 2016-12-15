@@ -30,6 +30,7 @@ func (t *TCollager) create(group int, w int, h int) (*TCollage, error) {
 
 	//создаем поле для группы с ее ограничениями
 	//может работать параллельно одновременно для разных пользователей с разными ограничениями
+	//если группа 0, то без категорий
 	b, f := t.gen(&TLimits{maxX: w, maxY: h, group: group}, 0, make(TField))
 
 	fmt.Println("Создан коллаж из", len(f), " картинок")
@@ -119,7 +120,7 @@ func (t *TCollager) gen(limits *TLimits, used_square int64, used_field TField) (
 	best_field := used_field        //лучшее поле для максимальной площади
 	for n, _ := range t.DB.Images { //перебираем каждую картинку и пробуем ее вставить
 		//условие отсева: они приналежат одной группе с имеющимися на поле
-		if limits.group == t.DB.Images[n].Group {
+		if limits.group == t.DB.Images[n].Group || limits.group == 0 {
 			_, ok := used_field[n]
 			if ok {
 				continue //если картинка уже есть на поле - пропускаем

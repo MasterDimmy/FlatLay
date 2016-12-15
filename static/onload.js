@@ -12,7 +12,7 @@
 			}
 		});
 		
-		$.getJSON("/get_field?group=1&width="+document.getElementById("data").offsetWidth+"&height="+document.getElementById("data").offsetHeight, function(json) {
+		$.getJSON("/get_field?group="+document.getElementById("group").value+"&width="+document.getElementById("data").offsetWidth+"&height="+document.getElementById("data").offsetHeight, function(json) {
 			console.log(json);
 			if (json.Success == true) {
 				//json.Items: 	Images, Square, MaxAvailable
@@ -44,4 +44,6 @@
  document.addEventListener("DOMContentLoaded", ready);
 
  window.onresize = ready;
+ 
+$("#group").change(ready);
  

@@ -27,10 +27,10 @@
 			.container
 			{				
 				vertical-align: middle;
-				height:90%;
+				height:70%;
 			}
 			.color {
-				background-color:#efe;
+				--//background-color:#efe;
 			}
 			.data {
 				border: 4px double black;
@@ -42,10 +42,9 @@
 
 	<body>
 		<h1 align="center"> Демонстрация программы создания коллажей v0.1 </h1>
-		<div class="auto container_width"><div>Всего возможных групп (категорий), и коллажей: </div><div id="total_groups">?</div></div>
-
+		<div class="auto container_width"><div>Всего возможных групп (категорий), и коллажей: </div><div id="total_groups">?</div></div>		
 			<div id="collage" class="container_width auto container">
-				<p>Коллаж №1</p>
+				<p>Коллаж №<input id="group" type="text" width="40" value="1"> +ENTER(если 0, то нет ограничения на группу, при большой базе сервер будет считать пару часов)</p>
 				<div id="square">?</div>
 				<div id="max_square">?</div>
 				<div id="data" class="data color"></div>
