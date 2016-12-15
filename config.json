@@ -1,0 +1,11 @@
+{
+	"WebServer": {
+		"IpPort": ":7070",	
+		"Static": "./static"
+	},
+	"Collager": {
+		"Items": 9,
+		"Database": "database.json",
+		"ImageFolder": "./looks"
+	}
+}

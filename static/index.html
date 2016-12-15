@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru-RU" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Демонстрация программы создания коллажей v0.1</title>
+		
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		
+		<script src="./libs/jquery.min.js"></script>		
+		
+		<style>
+			html,body{
+				height:100%;
+			}
+			.auto {
+				margin: auto;
+			}
+			.container_width {
+				width:80%;
+			}
+			.container
+			{				
+				vertical-align: middle;
+				height:70%;
+			}
+			.color {
+				--//background-color:#efe;
+			}
+			.data {
+				border: 4px double black;
+				height:100%;
+				width:100%;
+			}
+	    </style>
+	</head>
+
+	<body>
+		<h1 align="center"> Демонстрация программы создания коллажей v0.1 </h1>
+		<div class="auto container_width"><div>Всего возможных групп (категорий), и коллажей: </div><div id="total_groups">?</div></div>		
+			<div id="collage" class="container_width auto container">
+				<p>Коллаж №<input id="group" type="text" width="40" value="1"> +ENTER(если 0, то нет ограничения на группу, при большой базе сервер будет считать пару часов)</p>
+				<div id="square">?</div>
+				<div id="max_square">?</div>
+				<div id="data" class="data color"></div>
+			</div>
+	</body>
+	
+	<script src="./onload.js"></script>
+
+</html>
