@@ -143,9 +143,9 @@ func (t *TCollager) gen(limits *TLimits, used_square int64, used_field TField, s
 			vary := []int{0} //создаем варианты размещения по Y
 			for i, v := range used_field {
 				varx = append(varx, v.x+1)
-				varx = append(varx, v.x+t.DB.Images[i].Width+1)
+				varx = append(varx, v.x+t.DB.Images[i].Width+4) //4 на тень
 				vary = append(varx, v.y+1)
-				vary = append(varx, v.y+t.DB.Images[i].Height+1)
+				vary = append(varx, v.y+t.DB.Images[i].Height+4)
 			}
 			for _, x := range varx { //перебираем варианты по X
 				for _, y := range vary { //перебираем варианты по Y

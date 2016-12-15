@@ -35,7 +35,7 @@
 			}
 		});
 		
-		$.getJSON("/get_field?group="+document.getElementById("group").value+"&width="+(document.getElementById("data").offsetWidth-8)+"&height="+(document.getElementById("data").offsetHeight-8), function(json) {
+		$.getJSON("/get_field?group="+document.getElementById("group").value+"&width="+(document.getElementById("data").offsetWidth-12)+"&height="+(document.getElementById("data").offsetHeight-12), function(json) {
 			console.log(json);
 			if (json.Success == true) {
 				if (cur!=last-1) {
