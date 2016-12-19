@@ -48,8 +48,8 @@ function imgclick () {
 				//json.Items: 	Images, Square, MaxAvailable
 				//images: [PosX, Pos, Path]
 				
-				document.getElementById("square").innerHTML = "Занятая площадь = "+json.Items.Square;
-				document.getElementById("max_square").innerHTML = "Максимально возможная = " + json.Items.MaxAvailable;
+				document.getElementById("square").innerHTML = "Taken square = "+json.Items.Square;
+				document.getElementById("max_square").innerHTML = "Max possible = " + json.Items.MaxAvailable;
 				json.Items.Images.forEach(function(item, i) {
 					console.log("item=",item);	
 					var image=document.createElement("img");

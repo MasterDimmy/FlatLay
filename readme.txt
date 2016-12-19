@@ -1,79 +1,41 @@
-Высылаю 1 часть задания.
-Макет, демонстрирующий размещение картинок в заданной рамке с учетов весов и категорий.
+This Golang + HTML + JavaScript program shows solving of Flat Lay problem.
+So it can create something like this: http://theexposure.co/wp-content/uploads/2015/07/Photo-27-06-2015-3-02-27-pm.jpg
 
-Запуск: collages.exe под ОС Windows
-Либо: go run под Linux, iOS
+Windows run: collages.exe
+Linux, iOS run: go run 
 
-Запустится веб-сервер на порту 7070.
-Заходим на http://localhost:7070
-Изменяем мышей размеры окна браузера - видим результат.
+Starts web-server at 7070 port.
+Go to http://localhost:7070
+Change the browser size - look at the result in main window.
 
-(если не отображается ничего - разрешите программу в брендмауере,
-изменить порт, если нужно, можно в config.json,
-вся отладочная информация с выводом всех ошибок идет в консоль)
-
-Как сделано:
-Программа create_db.exe обрабатывает заданный каталог командой
-create_db.exe <путь> и создает базу картинок database.json с массивом объектов
+How its made:
+Program create_db.exe scans folder with console command
+create_db.exe <path> and created the database of pictures "database.json" with array of objects
 
 type TImage struct {
-    Name   string //имя картинки
-    Path   string //локальный путь для веб-сервера
-    Width  int    //ширина
-    Height int    //высота
-    Weight int    //архимедов вес
-    Group  int    //группа стиля одежды (категория)
+    Name   string //picrure name
+    Path   string //path to picture
+    Width  int    //
+    Height int    //
+    Weight int    //not used now (for top and bottom layout of selected pictures)
+    Group  int    //group of pictures (cars, clothe's style, etc.)
 }
 
-Номер группы создается автоматически на основе имени файла картинки по правилу:
-    выделяем самое короткое имя produktybrjuki-bez-zastezhki-classic-fit-sinij-939493stl.jpg
-    убираем все до .
-    считаем эту длину "базовой"
-    все имена, что входят в "базу" - принадлежат одной группе
+Folders & files:
+	looks - keeps pictures
+	static - web-server
+   index.html - demo page
+   onload.js - working script
 
-    produktybrjuki-bez-zastezhki-classic-fit-sinij-939493stl
-    produktybrjuki-bez-zastezhki-classic-fit-sinij-939493stl_product1
-    produktybrjuki-bez-zastezhki-classic-fit-sinij-939493stl_product2
-    produktybrjuki-bez-zastezhki-classic-fit-sinij-939493stl_product3
+On run:
+Script gets total groups count at "/get_total_groups".
+Then script asks server to solve Flat Lay at given borders and get result at "/get_field?group=G&width=W&height=H"
 
+Server's answer: JSON array of pictures and they offsets for Flat Lay.
 
-Программа collages.exe есть веб-сервер вычислитель для сайта.
-Может быть расположен на хостинге в виде .go файлов, либо иначе.
+Current solution has timeout for solving with too many pictures: 1 sec. It takes best variant it could find on that time.
+If you set the group number, it returns best solution.
 
-Каталог looks - содержит картинки для отображения, их имена указаны в database.json
-Каталог static - каталог веб-сервера:
-   index.html - демонстрационная страница
-    onload.js - рабочий скрипт
+All server's output is in JSON with simple protocol.
 
-Скрипт при запуске страницы либо изменении номера группы узнает количество возможных групп (страниц для ленты) и пишет на экран. URL запроса к серверу "/get_total_groups"
-
-Далее скрипт отсылает размеры рамки, куда нужно вписать коллаж и номер группы, из которой выбирать картинки. URL: "/get_field?group=G&width=W&height=H"
-Ответ: JSON массив картинок с их координатами.
-
-Далее скрипт размещает картинки по заданным координатам внутри рамки.
-
-Сервер ищет такой вариант, который максимально много займет площади в рамки среди всех картинок заданной группы. Ограничения: нет пересечений, выходов за рамки и учет правила весов:
-        //не должно быть картинки БОЛЬШЕ весом, которая будет НАД текущей
-        //т.е. нельзя чтобы any.y+any.H<=y
-
-При текущем количестве групп и файлов, если задать 0, то сервер уйдет в глубокие вычисления. Алгоритм NP, поэтому занимает кубическое время от количества разрешенных картинок (внутри указанной группы).
-Я бы не советовал без ограничения базы это делать.
-
-Весь ввод-вывод в сервером через HTTP GET JSON, включая данные и протокол успешных ответов и ошибок.
-Все исходные файлы подробно прокомментированы.
-
-Далее:
-1) Теперь можем добавить разрешенную не одну группу, а несколько и показывать коллаж из 2-3 групп (стилей, категорий), это не должно уложить сервер при условии не более 20 картинок в пределах одной группы. Всего групп может быть сколько угодно. Сервер будет выбирать группы 1-2-3 и показывать в 1 коллаже, затем 1-2-4 во втором, и т.д.
-Либо: 1-2-3 в первом, 4-5-6 во втором, 7-8-9 в третьем и т.д.
-Либо: все три (два, четыре) номера участвующих групп в коллаже могут выбираться случайно или по предпочтениям пользователя. Это может задаваться на входе серверу в запросе /get_field и номера купленного товара, сервер определит сам группу и сначала предложит товар этих группы в рамках одного коллажа.
-
-2) Дизайн:
-  2.1.) растяжение и равномерное размещение выбранных картинок внутри рамки.
-  2.2.) затенение картинки и отображение html, внутри всплывающей подсказки при наведении на картинку коллажа (данные будут браться по URL: "/get_hint?id=N" , где N - id картинки, на которую навели мышей с базы).
-
-3) Создание динамической ленты (можно листать и по кнопке "вправо")
-
-4) Можем генерировать и статическую картинку-коллаж и показывать ее строго внутри рамки. Плюсы: быстрее работать на стороне клиента будет. Минусы: сложнее масштабировать и растягивать картинки внутри коллажа. Займет пару дней в этом случае.
-
-5) Проверка на совместимость нужных браузеров (уже должно работать, но все же).
-
+Sorry for English...
